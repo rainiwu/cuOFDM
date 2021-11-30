@@ -35,6 +35,7 @@ void QAM256::genMap() {
   do {
     auto j = i % 64;
     auto val = std::complex<float>(j % 8, (uint8_t)(j / 8));
+    val = std::complex<float>(val.real() / 7, val.imag() / 7);
     auto k = i >> 6;
     switch (k) {
     case 0:
