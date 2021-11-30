@@ -1,2 +1,2 @@
 set(TARGET cuOFDM)
-add_executable(${TARGET} main.cpp Modulator.cpp)
+add_executable(${TARGET} main.cpp Modulator.cpp Constellation.cpp)

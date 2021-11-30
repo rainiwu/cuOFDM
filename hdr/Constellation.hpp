@@ -17,7 +17,7 @@ public:
   Constellation &operator=(const Constellation &aCopy);
   ~Constellation();
 
-  inline const modMap &getMap() { return myMap; }
+  inline const modMap &getMap() const { return myMap; }
 
 protected:
   modMap myMap;
