@@ -3,6 +3,7 @@
 
 #include "Constellation.hpp"
 #include <cuComplex.h>
+#include <memory>
 #include <vector>
 
 namespace cuOFDM {
@@ -20,6 +21,10 @@ public:
 
   void operator()(const std::vector<uint8_t> &inBits);
 
+  std::shared_ptr<std::vector<std::complex<float>>> getResult();
+
+  bool isReady();
+
 protected:
   // constellation map
   modType myConst;
@@ -30,6 +35,14 @@ protected:
   cuComplex *dOut = nullptr;
   // bitstream input on device
   uint8_t *dIn = nullptr;
+
+  size_t mySize = 0;
+
+  bool resultReady = false;
+
+private:
+  // set max size to 80 MB
+  const static unsigned int MAXSIZE = 80000000;
 };
 
 } // namespace cuOFDM
