@@ -1,8 +1,11 @@
 #ifndef Demodulator_h
 #define Demodulator_h
 
+#include "Common.hpp"
 #include "Constellation.hpp"
 #include <cuComplex.h>
+#include <memory>
+#include <queue>
 #include <vector>
 
 namespace cuOFDM {
@@ -14,22 +17,28 @@ namespace cuOFDM {
 template <typename modType> class Demodulator {
 public:
   Demodulator();
-  Demodulator(const Demodulator &aCopy);
-  Demodulator &operator=(const Demodulator &aCopy);
+  Demodulator(const Demodulator &aCopy) = delete;
+  Demodulator &operator=(const Demodulator &aCopy) = delete;
   ~Demodulator();
 
-  void operator()(const std::vector<std::complex<float>>);
+  void operator<<(const std::vector<std::complex<float>> &someMods);
+  void interpolate();
+  void demod();
+  std::shared_ptr<std::array<uint8_t, BATCH_SIZE>> getBatch();
 
 protected:
   // constellation map
-  modType myConst;
+  const modType myConst;
+
+  std::queue<std::array<uint8_t, BATCH_SIZE>> bitQueue;
+  std::queue<std::array<std::complex<float>, BATCH_SIZE>> modQueue;
 
   // complex number array with the map on cuda device
   cuComplex *dMap = nullptr;
   // bitstream output on device
-  uint8_t *dOut = nullptr;
+  uint8_t *dBitBatch = nullptr;
   // modulated input on device
-  cuComplex *dIn = nullptr;
+  cuComplex *dModBatch = nullptr;
 };
 } // namespace cuOFDM
 
