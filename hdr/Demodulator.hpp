@@ -30,8 +30,8 @@ protected:
   // constellation map
   const modType myConst;
 
-  std::queue<std::array<uint8_t, BATCH_SIZE>> bitQueue;
   std::queue<std::array<std::complex<float>, BATCH_SIZE>> modQueue;
+  std::queue<std::array<uint8_t, BATCH_SIZE>> bitQueue;
 
   // complex number array with the map on cuda device
   cuComplex *dMap = nullptr;
@@ -39,6 +39,8 @@ protected:
   uint8_t *dBitBatch = nullptr;
   // modulated input on device
   cuComplex *dModBatch = nullptr;
+  // interpolated modulation symbols on device
+  cuComplex *dInterp = nullptr;
 };
 } // namespace cuOFDM
 

@@ -8,7 +8,7 @@
 using namespace cuOFDM;
 int main() {
   auto mod = Modulator<QAM256>();
-  auto input = std::vector<uint8_t>(4096);
+  auto input = std::vector<uint8_t>(BATCH_SIZE * 30);
 
   // First create an instance of an engine.
   std::random_device rnd_device;
@@ -22,15 +22,17 @@ int main() {
 
   std::cout << input[0] << ' ' << input[3000] << std::endl;
 
-  mod << input;
-  mod.process();
-  auto output = mod.getBatch();
-
   std::ofstream outfile;
-  outfile.open("test.iq", std::ofstream::binary);
-  std::cout << (*output)[0];
-  outfile.write((const char *)&(*output).front(),
-                input.size() * sizeof(std::complex<float>));
+  outfile.open("test.iq", std::ofstream::binary | std::ios_base::app);
+  for (int i = 0; i < 30; i++) {
+    mod << input;
+    input.erase(input.begin(), input.begin() + BATCH_SIZE);
+    mod.cpuProcess();
+    auto output = mod.getBatch();
+    std::cout << (*output)[0] << std::endl;
+    outfile.write((const char *)&(*output).front(),
+                  BATCH_SIZE * sizeof(std::complex<float>));
+  }
 
   return 0;
 }

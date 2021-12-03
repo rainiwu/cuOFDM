@@ -25,6 +25,9 @@ public:
   void process();
   std::shared_ptr<std::array<std::complex<float>, BATCH_SIZE>> getBatch();
 
+  // verification function to process using CPU
+  void cpuProcess();
+
 protected:
   // constellation map
   const modType myConst;
