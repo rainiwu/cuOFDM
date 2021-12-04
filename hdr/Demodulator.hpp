@@ -26,6 +26,8 @@ public:
   void demod();
   std::shared_ptr<std::array<uint8_t, BATCH_SIZE>> getBatch();
 
+  void cpuDemod();
+
 protected:
   // constellation map
   const modType myConst;
