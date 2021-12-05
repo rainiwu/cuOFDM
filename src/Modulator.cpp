@@ -27,7 +27,7 @@ template <> Modulator<QAM256>::~Modulator() {
 template <>
 void Modulator<QAM256>::operator()(void *inBuff, void *outBuff,
                                    cudaStream_t *aStream) const {
-  process((uint8_t *)inBuff, (cuComplex *)outBuff, dMap, dPlan, aStream);
+  process((uint8_t *)inBuff, (cuComplex *)outBuff, dMap, aStream);
 }
 
 template <> size_t Modulator<QAM256>::getInBufSize() const {

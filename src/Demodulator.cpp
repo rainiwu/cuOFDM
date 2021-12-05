@@ -23,7 +23,7 @@ template <> Demodulator<QAM256>::~Demodulator() { cudaFree(dMap); }
 template <>
 void Demodulator<QAM256>::operator()(void *inBuff, void *outBuff,
                                      cudaStream_t *aStream) const {
-  demod((cuComplex *)inBuff, (uint8_t *)outBuff, dMap, aStream);
+  demod((cuComplex *)inBuff, (uint8_t *)outBuff, (cuComplex *)dMap, aStream);
 }
 
 template <> size_t Demodulator<QAM256>::getInBufSize() const {
