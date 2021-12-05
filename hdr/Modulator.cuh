@@ -5,7 +5,11 @@
 #include <cstdint>
 #include <cuComplex.h>
 #include <cuda_runtime.h>
+#include <cufft.h>
 
-void processBitBatch(uint8_t* hBitBatch, uint8_t* dBitBatch, cuComplex* hModBatch, cuComplex* dModBatch, cuComplex* dMap);
+/** Modulates input buffer, saves to output buffer, expects size of BATCH_SIZE
+  * inBuff, outBuff are device pointers
+  */
+void process(uint8_t* inBuff, cuComplex* outBuff, cuComplex* dMap, cufftHandle* myPlan, cudaStream_t* aStream); 
 
 #endif

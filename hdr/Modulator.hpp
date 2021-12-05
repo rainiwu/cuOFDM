@@ -5,6 +5,7 @@
 #include "Constellation.hpp"
 #include "Pipe.hpp"
 #include <cuComplex.h>
+#include <cufft.h>
 #include <memory>
 #include <queue>
 #include <vector>
@@ -32,6 +33,8 @@ protected:
 
   // complex number array with the map on cuda device
   cuComplex *dMap = nullptr;
+  // fft planner
+  cufftHandle *dPlan = nullptr;
 };
 
 } // namespace cuOFDM
