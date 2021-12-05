@@ -8,8 +8,6 @@ namespace cuOFDM {
 
 template <> Modulator<QAM256>::Modulator() : myConst() {
   cudaMalloc((void **)&dMap, sizeof(cuComplex) * myConst.getMap().size());
-  cudaMalloc((void **)&dModBatch, sizeof(cuComplex) * BATCH_SIZE);
-  cudaMalloc((void **)&dBitBatch, sizeof(uint8_t) * BATCH_SIZE);
   // note that QAM256 Map will be constant throughout lifetime
   // thus, we can copy it over in constructor
   cuComplex temp[myConst.getMap().size()];
@@ -22,8 +20,6 @@ template <> Modulator<QAM256>::Modulator() : myConst() {
 template <> Modulator<QAM256>::~Modulator() {
   // free cuda device memory
   cudaFree(dMap);
-  cudaFree(dModBatch);
-  cudaFree(dBitBatch);
 }
 
 template <>
@@ -33,18 +29,6 @@ void Modulator<QAM256>::operator<<(const std::vector<uint8_t> &someBits) {
     batch[i] = someBits[i];
   bitQueue.push(batch);
   // TODO: handle nonideal case
-}
-
-template <> void Modulator<QAM256>::process() {
-  // load bits into batch
-  auto bitBatch = bitQueue.front();
-  bitQueue.pop();
-  // initialize new mod
-  auto modBatch = std::array<std::complex<float>, BATCH_SIZE>();
-  // process batch - assumes blocking
-  processBitBatch(&bitBatch.front(), dBitBatch, (cuComplex *)&modBatch.front(),
-                  dModBatch, dMap);
-  modQueue.push(modBatch);
 }
 
 template <> void Modulator<QAM256>::cpuProcess() {

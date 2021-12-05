@@ -3,6 +3,7 @@
 
 #include "Common.hpp"
 #include "Constellation.hpp"
+#include "Pipe.hpp"
 #include <cuComplex.h>
 #include <memory>
 #include <queue>
@@ -14,16 +15,18 @@ namespace cuOFDM {
  * The Demodulator class is a functor which takes some input complex samples in
  * a given modulation alphabet and outputs the appropriate bitstream.
  */
-template <typename modType> class Demodulator {
+template <typename modType> class Demodulator : public Pipe {
 public:
   Demodulator();
   Demodulator(const Demodulator &aCopy) = delete;
   Demodulator &operator=(const Demodulator &aCopy) = delete;
   ~Demodulator();
 
+  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream);
+  size_t getInBufSize() const;
+  size_t getOutBufSize() const;
+
   void operator<<(const std::vector<std::complex<float>> &someMods);
-  void interpolate();
-  void demod();
   std::shared_ptr<std::array<uint8_t, BATCH_SIZE>> getBatch();
 
   void cpuDemod();
@@ -37,12 +40,6 @@ protected:
 
   // complex number array with the map on cuda device
   cuComplex *dMap = nullptr;
-  // bitstream output on device
-  uint8_t *dBitBatch = nullptr;
-  // modulated input on device
-  cuComplex *dModBatch = nullptr;
-  // interpolated modulation symbols on device
-  cuComplex *dInterp = nullptr;
 };
 } // namespace cuOFDM
 

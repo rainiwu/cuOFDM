@@ -8,9 +8,6 @@ namespace cuOFDM {
 
 template <> Demodulator<QAM256>::Demodulator() : myConst() {
   cudaMalloc((void **)&dMap, sizeof(cuComplex) * myConst.getMap().size());
-  cudaMalloc((void **)&dModBatch, sizeof(cuComplex) * BATCH_SIZE);
-  cudaMalloc((void **)&dBitBatch, sizeof(uint8_t) * BATCH_SIZE);
-  cudaMalloc((void **)&dInterp, sizeof(cuComplex) * BATCH_SIZE);
 
   cuComplex temp[myConst.getMap().size()];
   for (auto val : myConst.getMap())
@@ -20,12 +17,7 @@ template <> Demodulator<QAM256>::Demodulator() : myConst() {
              cudaMemcpyHostToDevice);
 }
 
-template <> Demodulator<QAM256>::~Demodulator() {
-  cudaFree(dMap);
-  cudaFree(dModBatch);
-  cudaFree(dBitBatch);
-  cudaFree(dInterp);
-}
+template <> Demodulator<QAM256>::~Demodulator() { cudaFree(dMap); }
 
 template <>
 void Demodulator<QAM256>::operator<<(
@@ -34,14 +26,6 @@ void Demodulator<QAM256>::operator<<(
   for (size_t i = 0; i < BATCH_SIZE; i++)
     output[i] = someMods[i];
   modQueue.push(output);
-}
-
-template <> void Demodulator<QAM256>::interpolate() {
-  // TODO
-}
-
-template <> void Demodulator<QAM256>::demod() {
-  // TODO
 }
 
 template <> void Demodulator<QAM256>::cpuDemod() {
