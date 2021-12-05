@@ -1,5 +1,6 @@
 #include "Streamer.hpp"
 #include "Common.hpp"
+#include <array>
 
 namespace cuOFDM {
 

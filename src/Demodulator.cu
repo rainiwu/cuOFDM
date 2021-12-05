@@ -10,8 +10,7 @@ __global__ void demap(cuComplex* dMods, uint8_t* dBits, cuComplex* dMap) {
 
   uint8_t i = 0;
   do {
-    if((dMods[tid].x == dMap[i].x && dMods[tid].y == dMap[i].y) ||
-        (dMods[tid].x - dMap[i].x < 0.01 && dMods[tid].y - dMap[i].y < 0.01)) {
+    if(abs(dMods[tid].x - dMap[i].x) < 0.12 && abs(dMods[tid].y - dMap[i].y) < 0.12) {
       dBits[tid] = i;
       break;
     }

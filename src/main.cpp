@@ -2,6 +2,7 @@
 #include "Modulator.hpp"
 #include "Streamer.hpp"
 #include <algorithm>
+#include <array>
 #include <ctime>
 #include <cuda_runtime.h>
 #include <fstream>
@@ -14,7 +15,7 @@ int main() {
 
   std::random_device aDev;
   std::mt19937 me{aDev()};
-  std::uniform_int_distribution<uint8_t> dist{0, 255};
+  std::uniform_int_distribution<int> dist{0, 255};
   auto gen = [&dist, &me]() { return dist(me); };
   std::generate(in.begin(), in.end(), gen);
 

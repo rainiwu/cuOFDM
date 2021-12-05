@@ -27,11 +27,11 @@ void Demodulator<QAM256>::operator()(void *inBuff, void *outBuff,
 }
 
 template <> size_t Demodulator<QAM256>::getInBufSize() const {
-  return BATCH_SIZE * sizeof(uint8_t);
+  return BATCH_SIZE * sizeof(cuComplex);
 }
 
 template <> size_t Demodulator<QAM256>::getOutBufSize() const {
-  return BATCH_SIZE * sizeof(cuComplex);
+  return BATCH_SIZE * sizeof(uint8_t);
 }
 
 } // namespace cuOFDM
