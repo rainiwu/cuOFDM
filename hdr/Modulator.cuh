@@ -10,6 +10,6 @@
 /** Modulates input buffer, saves to output buffer, expects size of BATCH_SIZE
   * inBuff, outBuff are device pointers
   */
-void process(uint8_t* inBuff, cuComplex* outBuff, cuComplex* dMap, cufftHandle* myPlan, cudaStream_t* aStream); 
+void process(uint8_t* inBuff, cuComplex* outBuff, cuComplex* dMap, cudaStream_t* aStream); 
 
 #endif

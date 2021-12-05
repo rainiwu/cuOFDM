@@ -1,6 +1,6 @@
 #include "Demodulator.hpp"
+#include "Demodulator.cuh"
 #include <cuda_runtime.h>
-#include <fftw3.h>
 #include <fstream>
 #include <iostream>
 
@@ -9,7 +9,8 @@ namespace cuOFDM {
 template <> Demodulator<QAM256>::Demodulator() : myConst() {
   cudaMalloc((void **)&dMap, sizeof(cuComplex) * myConst.getMap().size());
 
-  cuComplex temp[myConst.getMap().size()];
+  cuComplex *temp =
+      (cuComplex *)malloc(sizeof(cuComplex) * myConst.getMap().size());
   for (auto val : myConst.getMap())
     temp[val.first] = make_float2(val.second.real(), val.second.imag());
 
@@ -21,7 +22,9 @@ template <> Demodulator<QAM256>::~Demodulator() { cudaFree(dMap); }
 
 template <>
 void Demodulator<QAM256>::operator()(void *inBuff, void *outBuff,
-                                     cudaStream_t *aStream) const {}
+                                     cudaStream_t *aStream) const {
+  demod((cuComplex *)inBuff, (uint8_t *)outBuff, dMap, aStream);
+}
 
 template <> size_t Demodulator<QAM256>::getInBufSize() const {
   return BATCH_SIZE * sizeof(uint8_t);

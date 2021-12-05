@@ -7,13 +7,14 @@ namespace cuOFDM {
 
 template <> Modulator<QAM256>::Modulator() : myConst() {
   cudaMalloc((void **)&dMap, sizeof(cuComplex) * myConst.getMap().size());
-  cudaMalloc((void **)&dPlan, sizeof(cufftHandle));
-  cufftPlan1d(dPlan, BATCH_SIZE, CUFFT_C2C, 1);
   // note that QAM256 Map will be constant throughout lifetime
   // thus, we can copy it over in constructor
-  cuComplex temp[myConst.getMap().size()];
-  for (auto val : myConst.getMap())
-    temp[val.first] = make_float2(val.second.real(), val.second.imag());
+  cuComplex *temp =
+      (cuComplex *)malloc(sizeof(cuComplex) * myConst.getMap().size());
+  for (auto val : myConst.getMap()) {
+    size_t i = val.first;
+    temp[i] = make_float2(val.second.real(), val.second.imag());
+  }
   cudaMemcpy(dMap, temp, sizeof(cuComplex) * myConst.getMap().size(),
              cudaMemcpyHostToDevice);
 }
@@ -21,7 +22,6 @@ template <> Modulator<QAM256>::Modulator() : myConst() {
 template <> Modulator<QAM256>::~Modulator() {
   // free cuda device memory
   cudaFree(dMap);
-  cudaFree(dPlan);
 }
 
 template <>
