@@ -1,6 +1,7 @@
 #ifndef Streamer_h
 #define Streamer_h
 
+#include "Common.hpp"
 #include "Pipe.hpp"
 #include <cuda_runtime.h>
 #include <memory>
@@ -19,6 +20,8 @@ public:
   ~Streamer();
 
   void operator()();
+  void operator<<(const std::array<uint8_t, BATCH_SIZE> &input);
+  void operator>>(std::array<uint8_t, BATCH_SIZE> &output);
 
 protected:
   cudaStream_t *myStream;

@@ -50,6 +50,16 @@ void Streamer::operator()() {
   (*myPipes.back())(myDMem.back(), outHMem, myStream);
 }
 
+void Streamer::operator<<(const std::array<uint8_t, BATCH_SIZE> &input) {
+  for (size_t i = 0; i < BATCH_SIZE; i++)
+    inHMem[i] = input[i];
+}
+
+void Streamer::operator>>(std::array<uint8_t, BATCH_SIZE> &output) {
+  for (size_t i = 0; i < BATCH_SIZE; i++)
+    output[i] = outHMem[i];
+}
+
 /*******************************/
 
 void Head::operator()(void *inBuff, void *outBuff,
