@@ -14,7 +14,8 @@ public:
   Streamer(const Streamer &aCopy) = delete;
   Streamer &operator=(const Streamer &aCopy) = delete;
 
-  Streamer(const std::vector<Pipe> &somePipes, cudaStream_t *aStream);
+  Streamer(std::vector<std::shared_ptr<Pipe>> &somePipes,
+           cudaStream_t *aStream);
   ~Streamer();
 
   void operator()();
@@ -22,7 +23,7 @@ public:
 protected:
   cudaStream_t *myStream;
 
-  std::vector<Pipe> myPipes;
+  std::vector<std::shared_ptr<Pipe>> myPipes;
   std::vector<void *> myDMem;
   uint8_t *inHMem;
   uint8_t *outHMem;
@@ -36,7 +37,7 @@ public:
   Head() {}
   ~Head() {}
 
-  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream);
+  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream) const;
 
   size_t getInBufSize() const;
   size_t getOutBufSize() const;
@@ -51,7 +52,7 @@ public:
   Tail() {}
   ~Tail() {}
 
-  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream);
+  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream) const;
 
   size_t getInBufSize() const;
   size_t getOutBufSize() const;

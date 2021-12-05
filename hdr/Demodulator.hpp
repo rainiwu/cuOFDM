@@ -22,21 +22,13 @@ public:
   Demodulator &operator=(const Demodulator &aCopy) = delete;
   ~Demodulator();
 
-  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream);
+  void operator()(void *inBuff, void *outBuff, cudaStream_t *aStream) const;
   size_t getInBufSize() const;
   size_t getOutBufSize() const;
-
-  void operator<<(const std::vector<std::complex<float>> &someMods);
-  std::shared_ptr<std::array<uint8_t, BATCH_SIZE>> getBatch();
-
-  void cpuDemod();
 
 protected:
   // constellation map
   const modType myConst;
-
-  std::queue<std::array<std::complex<float>, BATCH_SIZE>> modQueue;
-  std::queue<std::array<uint8_t, BATCH_SIZE>> bitQueue;
 
   // complex number array with the map on cuda device
   cuComplex *dMap = nullptr;
