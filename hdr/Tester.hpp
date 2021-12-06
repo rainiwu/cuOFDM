@@ -3,6 +3,7 @@
 
 #include "Demodulator.hpp"
 #include "Modulator.hpp"
+#include "Randomizer.hpp"
 #include "Streamer.hpp"
 #include <algorithm>
 #include <array>
@@ -15,8 +16,12 @@
 
 namespace cuOFDM {
 namespace Tester {
+
 int modDemod();
-}
+
+int modRandDemod();
+
+} // namespace Tester
 } // namespace cuOFDM
 
 #endif
