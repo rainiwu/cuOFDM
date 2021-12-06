@@ -11,15 +11,18 @@ int main(int argc, const char *argv[]) {
       Tester::modRandDemod();
     else if ("piped_loopback" == command || "2" == command)
       Tester::pipedModDemod();
+    else if ("throughput" == command || "3" == command)
+      Tester::throughput();
     else if ("--help" == command || "-h" == command)
       std::cout << "Valid arguments are:\n\t[0] loopback\n\t[1] "
-                   "noisy_loopback\n\t[2] piped_loopback\n"
+                   "noisy_loopback\n\t[2] piped_loopback\n\t[3] throughput\n"
                 << std::flush;
   } else {
     std::cout << "Running all tests\n";
     Tester::modDemod();
     Tester::modRandDemod();
     Tester::pipedModDemod();
+    Tester::throughput();
   }
   return 0;
 }
