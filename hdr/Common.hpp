@@ -5,5 +5,6 @@
 #define TNUM 32
 #define MOD_TNUM 32
 #define DEMOD_TNUM 32
+#define RAND_TNUM 32
 
 #endif

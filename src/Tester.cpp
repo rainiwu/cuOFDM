@@ -14,12 +14,7 @@ void makeRand(std::array<uint8_t, BATCH_SIZE> &output) {
 int modDemod() {
   auto in = std::array<uint8_t, BATCH_SIZE>();
 
-  // makeRand(in);
-  std::random_device aDev;
-  std::mt19937 me{aDev()};
-  std::uniform_int_distribution<int> dist{0, 255};
-  auto gen = [&dist, &me]() { return dist(me); };
-  std::generate(in.begin(), in.end(), gen);
+  makeRand(in);
 
   auto pipeline = std::vector<std::shared_ptr<Pipe>>();
   auto mod = std::make_shared<Modulator<QAM256>>();
