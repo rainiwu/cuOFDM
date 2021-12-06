@@ -8,15 +8,9 @@ __global__ void cuInitRand(curandState *aState) {
 __global__ void cuApplyRand(cuComplex* inBuff, cuComplex* outBuff, curandState *aState) {
   unsigned int tid = threadIdx.x + blockIdx.x * blockDim.x;
 
-  // generate rand and normalize to [-0.5, 0.5]
-  float randx = curand_uniform(&aState[tid]);
-  randx = randx - 0.5;
-  float randy = curand_uniform(&aState[tid]);
-  randy = randy - 0.5;
-
-  // apply -10dB scaling factor
-  randx = randx / 2;
-  randy = randy / 2;
+  // generate rand
+  float randx = curand_normal(&aState[tid]);
+  float randy = curand_normal(&aState[tid]);
 
   // apply to signal
   outBuff[tid].x = inBuff[tid].x + randx;

@@ -87,8 +87,8 @@ int modRandDemod() {
     result = std::string("FAIL");
 
   std::cout << "noisy loopback test: " << result << " with "
-            << ((float)mismatch) / ((float)BATCH_SIZE) << "\% accuracy"
-            << std::endl;
+            << (1.0 - ((float)mismatch) / ((float)BATCH_SIZE)) * 100.0
+            << "\% accuracy" << std::endl;
 
   if (std::string("PASS") == result)
     return EXIT_SUCCESS;
