@@ -7,6 +7,7 @@
 #include "Streamer.hpp"
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <ctime>
 #include <cuda_runtime.h>
 #include <fstream>
@@ -22,6 +23,8 @@ int modDemod();
 int pipedModDemod();
 
 int modRandDemod();
+
+int throughput();
 
 } // namespace Tester
 } // namespace cuOFDM
