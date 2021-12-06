@@ -214,7 +214,7 @@ int throughput() {
 
   std::cout << "throughput test: " << result << " with " << throughput
             << "Mbps throughput (" << (BATCH_SIZE * REPEATS * PIPES)
-            << " symbols in " << (time.count() * 1e6) << " seconds) and "
+            << " symbols in " << (time.count() / 1e6) << " seconds) and "
             << (1.0 -
                 ((float)mismatch) / ((float)(BATCH_SIZE * REPEATS * PIPES))) *
                    100.0
