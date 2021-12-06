@@ -6,5 +6,6 @@
 #define MOD_TNUM 32
 #define DEMOD_TNUM 32
 #define RAND_TNUM 32
+#define PIPES 64
 
 #endif

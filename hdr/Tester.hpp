@@ -19,6 +19,8 @@ namespace Tester {
 
 int modDemod();
 
+int pipedModDemod();
+
 int modRandDemod();
 
 } // namespace Tester

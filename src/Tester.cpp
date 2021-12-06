@@ -51,6 +51,54 @@ int modDemod() {
     return EXIT_FAILURE;
 }
 
+int pipedModDemod() {
+  auto in = std::vector<std::array<uint8_t, BATCH_SIZE>>(PIPES);
+
+  auto pipeline = std::vector<std::shared_ptr<Pipe>>();
+  auto mod = std::make_shared<Modulator<QAM256>>();
+  auto demod = std::make_shared<Demodulator<QAM256>>();
+
+  pipeline.push_back(mod);
+  pipeline.push_back(demod);
+
+  auto result = std::string("PASS");
+  auto out = std::array<uint8_t, BATCH_SIZE>();
+  auto top = std::vector<std::shared_ptr<Streamer>>(PIPES);
+
+  // prep pipes
+  cudaStream_t aStream[PIPES];
+  for (size_t i = 0; i < PIPES; i++) {
+    cudaStreamCreate(&aStream[i]);
+    makeRand(in[i]);
+  }
+
+  // run pipes
+  for (size_t i = 0; i < PIPES; i++) {
+    top[i] = std::make_shared<Streamer>(pipeline, &aStream[i]);
+    (*top[i]) << in[i];
+    (*top[i])();
+  }
+
+  // flush pipes
+  for (size_t i = 0; i < PIPES; i++) {
+    cudaStreamSynchronize(aStream[i]);
+    (*top[i]) >> out;
+    for (size_t j = 0; j < BATCH_SIZE; j++) {
+      if (in[i][j] != out[j]) {
+        result = std::string("FAIL");
+        break;
+      }
+    }
+  }
+
+  std::cout << "piped loopback test: " << result << std::endl;
+
+  if (std::string("PASS") == result)
+    return EXIT_SUCCESS;
+  else
+    return EXIT_FAILURE;
+}
+
 int modRandDemod() {
   auto in = std::array<uint8_t, BATCH_SIZE>();
 
@@ -88,7 +136,7 @@ int modRandDemod() {
 
   std::cout << "noisy loopback test: " << result << " with "
             << (1.0 - ((float)mismatch) / ((float)BATCH_SIZE)) * 100.0
-            << "\% accuracy" << std::endl;
+            << "\% accuracy (" << mismatch << " mismatched bytes)" << std::endl;
 
   if (std::string("PASS") == result)
     return EXIT_SUCCESS;
