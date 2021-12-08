@@ -12,6 +12,9 @@ __global__ void cuApplyRand(cuComplex* inBuff, cuComplex* outBuff, curandState *
   float randx = curand_normal(&aState[tid]);
   float randy = curand_normal(&aState[tid]);
 
+  randx = randx * ((float)BATCH_SIZE / 2048) * 2/3;
+  randy = randy * ((float)BATCH_SIZE / 2048) * 2/3;
+
   // apply to signal
   outBuff[tid].x = inBuff[tid].x + randx;
   outBuff[tid].y = inBuff[tid].y + randy;

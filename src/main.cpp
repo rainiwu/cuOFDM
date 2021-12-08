@@ -18,10 +18,7 @@ int main(int argc, const char *argv[]) {
                    "noisy_loopback\n\t[2] piped_loopback\n\t[3] throughput\n"
                 << std::flush;
   } else {
-    std::cout << "Running all tests\n";
-    Tester::modDemod();
-    Tester::modRandDemod();
-    Tester::pipedModDemod();
+    std::cout << "Running default test (throughput)\n";
     Tester::throughput();
   }
   return 0;
